@@ -1,0 +1,22 @@
+[workspace]
+members = ["crates/paam-core", "crates/paam-cli"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/SimpleTang/paam"
+authors = ["SimpleTang <simpletang1994@gmail.com>"]
+rust-version = "1.75"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "fs"] }
+git2 = "0.19"
+clap = { version = "4", features = ["derive"] }
+thiserror = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+directories-next = "2"

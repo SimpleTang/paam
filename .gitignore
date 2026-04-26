@@ -1,0 +1,63 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*.iml
+.fleet/
+.zed/
+
+# Logs / temp
+*.log
+*.tmp
+*.bak
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Build artifacts (placeholder — adjust per chosen tech stack via ADR-0001)
+target/                 # Rust
+node_modules/           # Node
+dist/
+build/
+out/
+*.pyc
+__pycache__/
+
+# Tauri / Electron / Wails
+src-tauri/target/
+src-tauri/Cargo.lock
+release/
+release-builds/
+
+# Coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# OS / system
+.cache/
+.local/
+
+# paam local working directory (during development)
+.paam-local/

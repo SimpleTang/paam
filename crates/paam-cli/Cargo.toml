@@ -1,0 +1,21 @@
+[package]
+name = "paam-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "Command-line interface for paam (Private AI Asset Manager)"
+default-run = "paam"
+
+[[bin]]
+name = "paam"
+path = "src/main.rs"
+
+[dependencies]
+paam-core = { path = "../paam-core" }
+clap = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
