@@ -11,8 +11,11 @@ description = "Core business logic for paam (Private AI Asset Manager)"
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
-tokio = { workspace = true }
-git2 = { workspace = true }
+serde_yaml_ng = { workspace = true }
+chrono = { workspace = true }
 thiserror = { workspace = true }
 tracing = { workspace = true }
 directories-next = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

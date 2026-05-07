@@ -36,13 +36,18 @@ $RECYCLE.BIN/
 !.env.example
 
 # Build artifacts (placeholder — adjust per chosen tech stack via ADR-0001)
-target/                 # Rust
-node_modules/           # Node
+# Rust
+target/
+# Node
+node_modules/
 dist/
 build/
 out/
 *.pyc
 __pycache__/
+
+# Claude Code 本地配置（每个开发者机器一份，不入库）
+.claude/settings.local.json
 
 # Tauri / Electron / Wails
 src-tauri/target/

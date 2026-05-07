@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  ci:
+    name: macOS / fmt + clippy + test + build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: cargo fmt --check
+        run: cargo fmt --all -- --check
+
+      - name: cargo clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: cargo test
+        run: cargo test --workspace
+
+      - name: cargo build (release)
+        run: cargo build --workspace --release
+
+      - name: Verify no in-process git library leaked into paam-core
+        # 对 transport 决策的硬性保证：paam-core 不应再依赖 git2 / libgit2 /
+        # libssh2（详见 swap-git-transport-to-cli change）
+        run: |
+          if cargo tree -p paam-core | grep -E 'git2|libgit2|libssh2'; then
+            echo "ERROR: paam-core 再次引入了 in-process git 依赖" >&2
+            exit 1
+          fi
