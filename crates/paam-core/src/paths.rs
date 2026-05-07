@@ -140,7 +140,7 @@ mod tests {
 
     #[test]
     fn claude_target_dir_uses_env_when_set() {
-        let _g = crate::test_support::env_lock().lock().unwrap();
+        let _g = crate::test_support::acquire_env_lock();
         std::env::set_var(ENV_PAAM_CLAUDE_TARGET_DIR, "/tmp/paam-target-xyz");
         let p = claude_skills_target_dir().unwrap();
         std::env::remove_var(ENV_PAAM_CLAUDE_TARGET_DIR);
@@ -149,7 +149,7 @@ mod tests {
 
     #[test]
     fn claude_target_dir_empty_env_is_treated_as_unset() {
-        let _g = crate::test_support::env_lock().lock().unwrap();
+        let _g = crate::test_support::acquire_env_lock();
         std::env::set_var(ENV_PAAM_CLAUDE_TARGET_DIR, "");
         let p = claude_skills_target_dir().unwrap();
         std::env::remove_var(ENV_PAAM_CLAUDE_TARGET_DIR);
@@ -159,7 +159,7 @@ mod tests {
 
     #[test]
     fn claude_target_dir_default_is_claude_skills_under_home() {
-        let _g = crate::test_support::env_lock().lock().unwrap();
+        let _g = crate::test_support::acquire_env_lock();
         std::env::remove_var(ENV_PAAM_CLAUDE_TARGET_DIR);
         let p = claude_skills_target_dir().unwrap();
         assert!(p.ends_with(".claude/skills"));

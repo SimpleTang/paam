@@ -401,7 +401,7 @@ mod tests {
     use crate::metadata::{InstalledAsset, Origin, OriginKind};
     use tempfile::TempDir;
 
-    use crate::test_support::env_lock;
+    use crate::test_support::acquire_env_lock;
 
     fn fresh_sandbox() -> (TempDir, TempDir, PaamRoot) {
         let root_tmp = TempDir::new().unwrap();
@@ -440,7 +440,7 @@ mod tests {
 
     #[test]
     fn sync_all_creates_symlinks_on_clean_target() {
-        let _g = env_lock().lock().unwrap();
+        let _g = acquire_env_lock();
         let (_r_tmp, target_tmp, root) = fresh_sandbox();
         std::env::set_var(paths::ENV_PAAM_CLAUDE_TARGET_DIR, target_tmp.path());
         install_fake_skill(&root, "pdf-review");
@@ -474,7 +474,7 @@ mod tests {
 
     #[test]
     fn sync_all_is_idempotent() {
-        let _g = env_lock().lock().unwrap();
+        let _g = acquire_env_lock();
         let (_r_tmp, target_tmp, root) = fresh_sandbox();
         std::env::set_var(paths::ENV_PAAM_CLAUDE_TARGET_DIR, target_tmp.path());
         install_fake_skill(&root, "p");
@@ -502,7 +502,7 @@ mod tests {
 
     #[test]
     fn sync_all_skips_foreign_content_without_force() {
-        let _g = env_lock().lock().unwrap();
+        let _g = acquire_env_lock();
         let (_r_tmp, target_tmp, root) = fresh_sandbox();
         std::env::set_var(paths::ENV_PAAM_CLAUDE_TARGET_DIR, target_tmp.path());
         install_fake_skill(&root, "p");
@@ -522,7 +522,7 @@ mod tests {
 
     #[test]
     fn sync_all_force_overwrites_foreign_content() {
-        let _g = env_lock().lock().unwrap();
+        let _g = acquire_env_lock();
         let (_r_tmp, target_tmp, root) = fresh_sandbox();
         std::env::set_var(paths::ENV_PAAM_CLAUDE_TARGET_DIR, target_tmp.path());
         install_fake_skill(&root, "p");
@@ -543,7 +543,7 @@ mod tests {
 
     #[test]
     fn sync_all_repairs_paam_broken_link() {
-        let _g = env_lock().lock().unwrap();
+        let _g = acquire_env_lock();
         let (_r_tmp, target_tmp, root) = fresh_sandbox();
         std::env::set_var(paths::ENV_PAAM_CLAUDE_TARGET_DIR, target_tmp.path());
         install_fake_skill(&root, "p");
@@ -564,7 +564,7 @@ mod tests {
 
     #[test]
     fn unsync_one_removes_symlink_and_clears_targets() {
-        let _g = env_lock().lock().unwrap();
+        let _g = acquire_env_lock();
         let (_r_tmp, target_tmp, root) = fresh_sandbox();
         std::env::set_var(paths::ENV_PAAM_CLAUDE_TARGET_DIR, target_tmp.path());
         install_fake_skill(&root, "p");
@@ -582,7 +582,7 @@ mod tests {
 
     #[test]
     fn unsync_when_target_absent_is_silent_success() {
-        let _g = env_lock().lock().unwrap();
+        let _g = acquire_env_lock();
         let (_r_tmp, target_tmp, root) = fresh_sandbox();
         std::env::set_var(paths::ENV_PAAM_CLAUDE_TARGET_DIR, target_tmp.path());
         install_fake_skill(&root, "p");
@@ -594,7 +594,7 @@ mod tests {
 
     #[test]
     fn unsync_all_clears_multiple_skills() {
-        let _g = env_lock().lock().unwrap();
+        let _g = acquire_env_lock();
         let (_r_tmp, target_tmp, root) = fresh_sandbox();
         std::env::set_var(paths::ENV_PAAM_CLAUDE_TARGET_DIR, target_tmp.path());
         install_fake_skill(&root, "a");

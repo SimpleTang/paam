@@ -53,11 +53,18 @@ pub fn make_fixture_repo() -> (TempDir, String) {
 ///
 /// 进程级 `std::env::set_var` 与 `remove_var` 在 cargo test 默认并行下会互相
 /// 污染（如 sync 模块测试与 install 模块测试都用 `PAAM_CLAUDE_TARGET_DIR`）。
-/// 任何用 env_var 的测试 SHALL 在测试入口 `let _g = env_lock().lock().unwrap();`
+/// 任何用 env_var 的测试 SHALL 在测试入口 `let _g = acquire_env_lock();`
 /// 一份。所有这类测试共享同一把锁 → 串行执行。
-pub fn env_lock() -> &'static std::sync::Mutex<()> {
+///
+/// **注意**：返回的 `MutexGuard` 已对 `PoisonError` 容错——某个测试持锁时
+/// panic 会让锁 poison，若用 `lock().unwrap()` 后续测试会全军覆没（CI 上常
+/// 见的 PoisonError 雪崩）；此 helper 用 `unwrap_or_else(into_inner)` 让真正
+/// 的根因测试单独失败，不连累其它。
+pub fn acquire_env_lock() -> std::sync::MutexGuard<'static, ()> {
     static LOCK: std::sync::OnceLock<std::sync::Mutex<()>> = std::sync::OnceLock::new();
     LOCK.get_or_init(|| std::sync::Mutex::new(()))
+        .lock()
+        .unwrap_or_else(|p| p.into_inner())
 }
 
 /// 构造一个含若干文件的本地 git 仓（worktree 形式，非 bare），返回 TempDir。

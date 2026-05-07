@@ -460,7 +460,7 @@ mod tests {
     #[test]
     fn uninstall_after_sync_clears_target_symlink_in_single_commit() {
         // 共享 env 锁串行；与 sync / paths 模块的 env_var 测试相互排斥
-        let _g = crate::test_support::env_lock().lock().unwrap();
+        let _g = crate::test_support::acquire_env_lock();
 
         let (_d, root, _k) = make_sandbox_with_sources(&[(
             "fixture/a",
@@ -472,12 +472,18 @@ mod tests {
 
         let resolved = resolve_skill(&root, "p", None).unwrap();
         install_skill(&root, &resolved, false).unwrap();
-        crate::sync::sync_all(&root, false).unwrap();
+        let report = crate::sync::sync_all(&root, false).unwrap();
 
         let target_path = target_tmp.path().join("p");
+        let resolved_target_root = crate::paths::claude_skills_target_dir();
+        let installed_skills = crate::metadata::list_skills(&root);
         assert!(
             std::fs::symlink_metadata(&target_path).is_ok(),
-            "sync 后应存在"
+            "sync 后应存在；report={:?} target_root={:?} target_path={:?} installed={:?}",
+            report,
+            resolved_target_root,
+            target_path,
+            installed_skills.as_ref().map(|v| v.iter().map(|m| &m.name).collect::<Vec<_>>()),
         );
 
         uninstall_skill(&root, "p").unwrap();
