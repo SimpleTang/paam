@@ -483,7 +483,9 @@ mod tests {
             report,
             resolved_target_root,
             target_path,
-            installed_skills.as_ref().map(|v| v.iter().map(|m| &m.name).collect::<Vec<_>>()),
+            installed_skills
+                .as_ref()
+                .map(|v| v.iter().map(|m| &m.name).collect::<Vec<_>>()),
         );
 
         uninstall_skill(&root, "p").unwrap();
